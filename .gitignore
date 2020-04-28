@@ -1,0 +1,9 @@
+*.ark
+*.gz
+*.png
+*.pyc
+*.scp
+*.svg
+*.tar
+cache
+logs
