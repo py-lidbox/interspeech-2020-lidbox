@@ -47,7 +47,7 @@ for config_file in config_files:
     model2params.append((model_num, million_params, embedding_dim))
 
 with open(args.csv_out_path, "w") as f:
-    print("Model", "$10^6$ params", "$K$", sep=',', file=f)
+    print("Model", "$10^6$ params", "$D$", sep=',', file=f)
     for model_num, million_params, embedding_dim in model2params:
         print(model_num, format(million_params, ".1f"), embedding_dim, sep=',', file=f)
 print("wrote '{}'".format(args.csv_out_path))
