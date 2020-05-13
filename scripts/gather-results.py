@@ -70,6 +70,15 @@ def cavg_from_config(config):
     cavg = next(m["result"] for m in metrics if "average_detection_cost" in m["name"])
     return cavg
 
+def format_cavg(cavg, best):
+    cavg_str = format(cavg, ".3f")
+    if cavg == best:
+        cavg_str = r"\textbf{" + cavg_str + "}"
+    return cavg_str
+
+def colwise_best_cavg(results):
+    return {k: min(r[k] for r in results) for k in results[0].keys()}
+
 data = {"closed-task-e2e": [], "closed-task-embed": [], "open-task-embed": []}
 for model_num, config_files in enumerate(config_files_by_model, start=1):
     for v in data.values():
@@ -85,13 +94,15 @@ for model_num, config_files in enumerate(config_files_by_model, start=1):
         config = lidbox.api.load_yaml(os.path.join(args.experiment_dir, config_file.replace(".yaml", "-combined3backendNB.yaml")))
         data["open-task-embed"][-1][dataset] = cavg_from_config(config)
 
+data = {task: (results, colwise_best_cavg(results)) for task, results in data.items()}
+
 os.makedirs(args.csv_out_dir, exist_ok=True)
-for task, results in data.items():
+for task, (results, best) in data.items():
     csv_out_path = os.path.join(args.csv_out_dir, "{}-cavg.csv".format(task))
     print("writing '{}'".format(csv_out_path))
     with open(csv_out_path, "w") as f:
         print("Model", *[dataset2name[m] for m in dataset_order], sep=',', file=f)
         for result in results:
             model_num_str = format(result["model_num"], "d")
-            cavg_by_dataset = [format(result[ds], ".3f") for ds in dataset_order]
+            cavg_by_dataset = [format_cavg(result[ds], best[ds]) for ds in dataset_order]
             print(model_num_str, *cavg_by_dataset, sep=',', file=f)
