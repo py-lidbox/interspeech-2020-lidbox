@@ -2,14 +2,9 @@
 # Autogenerate lidbox config files for training Gaussian Naive Bayes
 set -ue
 
+experiment_dir=
+source scripts/env.bash
 source scripts/utils.bash
-
-if [ $# -ne 1 ]; then
-    echo_err "error: wrong number of args: $# out of 1"
-    echo_err 'usage: bash generate-embedding-configs.bash $(pwd)'
-    exit 2
-fi
-expdir=$1
 
 closed_set_configs=(
 models/ap19-olr/config.ap19olr-baseline.yaml
@@ -39,29 +34,29 @@ open_set_configs=(
 models/combined3/config.ap19olr-baseline.yaml
 models/combined3/config.dosl-baseline.yaml
 models/combined3/config.mgb3-baseline.yaml
+models/combined3/config.spherespeaker.yaml
+models/combined3/config.xvec-2d.yaml
 models/combined3/config.xvec-channeldropout.yaml
 models/combined3/config.xvec-extended.yaml
-models/combined3/config.xvec-2d.yaml
-models/combined3/config.spherespeaker.yaml
 )
 dataset_keys=(ap19-olr mgb3 dosl)
 
 echo 'checking closed set config files with lidbox JSON schema'
 for cf in ${closed_set_configs[*]}; do
-    lidbox utils -v --validate-config-file $expdir/$cf || exit $?
+    lidbox utils -v --validate-config-file $experiment_dir/$cf || exit $?
 done
 echo 'checking open set config files with lidbox JSON schema'
 for cf in ${open_set_configs[*]}; do
-    lidbox utils -v --validate-config-file $expdir/$cf || exit $?
+    lidbox utils -v --validate-config-file $experiment_dir/$cf || exit $?
 done
 echo 'converting closed set config files'
 for cf in ${closed_set_configs[*]}; do
     dataset=$(basename $(dirname $cf))
     out_cf=$(echo $cf | sed 's|\.yaml$|-backendNB.yaml|g')
-    python3 $expdir/scripts/generate-embedding-configs.py \
-        $expdir/$cf \
-        $expdir/$cf \
-        $expdir/$out_cf \
+    python3 $experiment_dir/scripts/generate_embedding_config.py \
+        $experiment_dir/$cf \
+        $experiment_dir/$cf \
+        $experiment_dir/$out_cf \
         $dataset \
         --batch-size 500 \
         || exit $?
@@ -72,10 +67,10 @@ for cf in ${open_set_configs[*]}; do
     for dataset in ${dataset_keys[*]}; do
         out_cf=$(basename $cf | sed 's|\.yaml$|-combined3backendNB.yaml|g')
         out_cf=models/$dataset/$out_cf
-        python3 $expdir/scripts/generate-embedding-configs.py \
-            $expdir/$cf \
-            $expdir/models/$dataset/config.baseline.yaml \
-            $expdir/$out_cf \
+        python3 $experiment_dir/scripts/generate_embedding_config.py \
+            $experiment_dir/$cf \
+            $experiment_dir/models/$dataset/config.$(echo $dataset | tr --delete '-')-baseline.yaml \
+            $experiment_dir/$out_cf \
             $dataset \
             --batch-size 500 \
             || exit $?

@@ -7,3 +7,5 @@
 *.tar
 cache
 logs
+# auto-generated config file
+config*backendNB.yaml
