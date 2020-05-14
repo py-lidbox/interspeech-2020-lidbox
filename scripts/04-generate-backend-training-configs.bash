@@ -58,7 +58,7 @@ for cf in ${closed_set_configs[*]}; do
         $experiment_dir/$cf \
         $experiment_dir/$out_cf \
         $dataset \
-        --batch-size 500 \
+        --batch-size 100 \
         || exit $?
     echo "ok '$cf' -> '$out_cf'"
 done
@@ -72,7 +72,7 @@ for cf in ${open_set_configs[*]}; do
             $experiment_dir/models/$dataset/config.$(echo $dataset | tr --delete '-')-baseline.yaml \
             $experiment_dir/$out_cf \
             $dataset \
-            --batch-size 500 \
+            --batch-size 100 \
             || exit $?
         echo "ok '$cf' -> '$out_cf'"
     done
