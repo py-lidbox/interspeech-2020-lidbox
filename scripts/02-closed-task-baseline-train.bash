@@ -2,8 +2,7 @@
 # Train the baseline models of three datasets
 set -ue
 
-experiment_dir=/m/triton/scratch/elec/puhe/p/lindgrm1/exp
-
+experiment_dir=
 source $experiment_dir/scripts/env.bash
 source $experiment_dir/scripts/utils.bash
 

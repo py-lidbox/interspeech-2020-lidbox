@@ -12,5 +12,12 @@ It is unlikely the experiments work right away and you probably need to make som
 
 * Fix acoustic data prefix `/m/teamwork/t40511_asr/c/` in all `utt2path` files under `data`.
 * Make sure you have the acoustic data for all three datasets.
-* Fix experiment directory `/m/triton/scratch/elec/puhe/p/lindgrm1/exp` or `/scratch/elec/puhe/p/lindgrm1/exp` in all yaml configuration files.
+* Fix experiment directory `/m/triton/scratch/elec/puhe/p/lindgrm1/exp` or `/scratch/elec/puhe/p/lindgrm1/exp` in all yaml configuration files and in `scripts/env.bash`.
 * Install TensorFlow 2 and `lidbox`.
+
+## Recipe
+
+Reproducing all results can be achieved by running the numbered scripts in the `scripts` directory:
+
+* `01-closed-task-gather-acoustic-data.bash`
+* `02-closed-task-baseline-train.bash`
