@@ -23,6 +23,6 @@ for config in ${config_files[*]}; do
         --error=$experiment_dir/logs/${jobname}.err \
         --time=01-00 \
         --gres=gpu:1 \
-        --mem=32G \
+        --mem=20G \
         $experiment_dir/scripts/lidbox-run.bash e2e $config
 done

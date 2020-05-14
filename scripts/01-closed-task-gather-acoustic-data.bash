@@ -3,8 +3,8 @@
 set -ue
 
 experiment_dir=
-source $experiment_dir/scripts/env.bash
-source $experiment_dir/scripts/utils.bash
+source scripts/env.bash
+source scripts/utils.bash
 
 config_files=(
 models/ap19-olr/config.prepare.yaml
@@ -31,6 +31,6 @@ for config in ${config_files[*]}; do
         --error=$experiment_dir/logs/${jobname}.err \
         --cpus-per-task=5 \
         --time=00-04 \
-        --mem=64G \
+        --mem=20G \
         $experiment_dir/scripts/lidbox-run.bash prepare $config
 done

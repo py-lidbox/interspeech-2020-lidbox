@@ -1,5 +1,8 @@
+#!/usr/bin/env python3
 """
-For the purpose of comparable results, to ensure the open task is exactly the union of all closed task inputs, this script combines all acoustic data caches into a single cache.
+For the purpose of comparable results, we want to ensure that the open task contains precisely the union of all closed task training sets.
+This script loads all acoustic data caches, samples elements randomly from each cache and creates a single, combined cache of acoustic data for the open task.
+Data is merged split-wise, i.e. combined training data is from three training sets, combined validation data is from three validation sets, and combined test data is from three test sets.
 """
 import argparse
 import os
@@ -16,31 +19,29 @@ parser.add_argument("experiment_dir", type=str)
 args = parser.parse_args()
 expdir = args.experiment_dir
 
-split_types = ("train", "validation", "test")
-
-# Use baseline configs for dataset definitions
-baseline_configs = [
-    os.path.join(
-        expdir,
-        "models",
-        dataset_key,
-        "config.{}-baseline.yaml".format(dataset_key.replace('-', "")))
-    for dataset_key in ("ap19-olr", "mgb3", "dosl")]
 combined_config = os.path.join(expdir, "models/combined3/config.ap19olr-baseline.yaml")
 
-datasets = []
-seen_labels = []
-for conf_path in baseline_configs:
-    split2meta, labels, config = lidbox.api.load_splits_from_config_file(conf_path)
-    # Drop 'unknown' OOS mix from ap19-olr
-    labels = [l for l in labels if l != "unknown"]
-    seen_labels.extend(labels)
-    # Dataset up to the step where acoustic data is cached
-    del config["post_process"], config["features"], config["experiment"]
-    config["pre_process"]["cache"]["consume"] = False
-    datasets.append(lidbox.api.create_datasets(split2meta, labels, config))
+def load_closed_task_datasets():
+    baseline_configs = [
+        (dataset_key, os.path.join(expdir, "models", dataset_key, "config.prepare.yaml"))
+        for dataset_key in ("ap19-olr", "mgb3", "dosl")]
+    datasets = []
+    seen_labels = []
+    for dataset_key, conf_path in baseline_configs:
+        split2meta, labels, config = lidbox.api.load_splits_from_config_file(conf_path)
+        # Drop 'unknown' OOS mix from ap19-olr
+        labels = [l for l in labels if l != "unknown"]
+        seen_labels.extend(labels)
+        config["pre_process"]["cache"]["consume"] = False
+        split2ds = lidbox.api.create_datasets(split2meta, labels, config)
+        if dataset_key == "mgb3":
+            split2ds["dev"] = split2ds.pop("dev0.1")
+        datasets.append(split2ds)
+    return datasets, seen_labels
 
-logger.info("all datasets loaded")
+datasets, seen_labels = load_closed_task_datasets()
+
+logger.info("all datasets loaded, loading metadata for open set configuration")
 
 _, all_labels, config = lidbox.api.load_splits_from_config_file(combined_config)
 assert set(seen_labels) == set(all_labels), sorted(set(seen_labels) ^ set(all_labels))
@@ -62,6 +63,7 @@ logger.info("computing dataset sample ratios for weighting random sampling durin
 
 # Create weights for each dataset depending on how many samples they have
 # Assuming the source datasets are cached, we can iterate over them
+split_types = ("test", "dev", "train")
 dataset_weights = [{k: ds[k].reduce(0, lambda c, x: c + 1).numpy() for k in split_types} for ds in datasets]
 num_total_elements = {k: sum(ds[k] for ds in dataset_weights) for k in split_types}
 dataset_weights = [{k: ds[k] / num_total_elements[k] for k in split_types} for ds in dataset_weights]
@@ -69,14 +71,15 @@ dataset_weights = [{k: ds[k] / num_total_elements[k] for k in split_types} for d
 logger.info("merging datasets")
 
 # Create combined dataset iterators by sampling randomly from all 3 dataset iterators
-# Use sample ratios as weights to avoid having a tail of samples from only one dataset
+# Use sample ratios as weights for the training set to avoid having a tail of samples from only one dataset
 # Repeat separately for all splits
 split2ds = {
     k: (tf.data.experimental.sample_from_datasets(
             [d[k] for d in datasets],
             weights=[d[k] for d in dataset_weights] if k == "train" else None)
         .filter(is_not_unknown)
-        # Shuffling is a bit overkill here, it can be removed if too much RAM is being used
+        # Shuffling is a bit overkill here, the random sampling should be sufficient
+        # This step can be removed if too much RAM is being used
         .shuffle(int(2e5))
         .map(fix_targets)
         .apply(lambda ds: cache_ds(ds, k)))
