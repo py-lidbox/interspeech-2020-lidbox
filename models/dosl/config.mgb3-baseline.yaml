@@ -85,9 +85,6 @@ post_process:
     batch_size: 1000
     key: logmelspectrogram
     consume: false
-  tensorboard:
-    num_batches: 100
-    batch_size: 64
 
 experiment:
   cache_directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/dosl/cache

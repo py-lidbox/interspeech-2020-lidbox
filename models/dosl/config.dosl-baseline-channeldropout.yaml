@@ -88,9 +88,6 @@ post_process:
   chunks:
     length: 30
     step: 30
-  tensorboard:
-    num_batches: 100
-    batch_size: 64
 
 experiment:
   cache_directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/dosl/cache
