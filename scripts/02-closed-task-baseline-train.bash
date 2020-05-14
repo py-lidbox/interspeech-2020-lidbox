@@ -3,8 +3,8 @@
 set -ue
 
 experiment_dir=
-source $experiment_dir/scripts/env.bash
-source $experiment_dir/scripts/utils.bash
+source scripts/env.bash
+source scripts/utils.bash
 
 config_files=(
 models/ap19-olr/config.ap19olr-baseline.yaml
