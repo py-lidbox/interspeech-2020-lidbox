@@ -5,8 +5,16 @@ set -ue
 source scripts/utils.bash
 
 # Load config file list and remove comment lines
-mapfile -t config_files < scripts/lidbox-config.list
-config_files=(${config_files[@]##\#*})
+# mapfile -t config_files < scripts/lidbox-config.list
+# config_files=(${config_files[@]##\#*})
+config_files=(
+# models/ap19-olr/config.baseline-adam-eps1.yaml
+# models/ap19-olr/config.baseline-adam-lr0001-eps1.yaml
+models/ap19-olr/config.spherespeaker-embed1000.yaml
+models/mgb3/config.spherespeaker-embed1000.yaml
+models/dosl/config.spherespeaker-embed1000.yaml
+models/combined3/config.spherespeaker-embed1000.yaml
+)
 
 num_prepare_cpus=5
 slurm_kwargs="\

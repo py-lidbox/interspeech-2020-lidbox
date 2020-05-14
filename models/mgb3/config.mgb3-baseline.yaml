@@ -1,25 +1,24 @@
 datasets:
-  - key: sbs
+  - key: mgb3
     labels:
-    - be
-    - bg
-    - cs
-    - hr
-    - mk
-    - pl
-    - ru
-    - sk
-    - sl
-    - sr
-    - uk
+    - afb
+    - ar-x-lav
+    - ar-x-nor
+    - arb
+    - arz
     splits:
       - key: train
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/sbs/train
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/train_5dev0.9_augment
+        datafiles:
+            - utt2path
+            - utt2label
+      - key: dev0.1
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/dev0.1_fixed_labels
         datafiles:
             - utt2path
             - utt2label
       - key: test
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/sbs/test
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/test_fixed_labels
         datafiles:
             - utt2path
             - utt2label
@@ -47,10 +46,9 @@ pre_process:
     length_ms: 2000
     step_ms: 1500
   cache:
-    directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/sbs/cache
+    directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/mgb3/cache
     batch_size: 1000
     key: signals_rmsvad_chunks_2sec
-    log_interval: 20000
     consume: false
 
 features:
@@ -76,7 +74,7 @@ post_process:
     sample_rate: null
     signal: null
   cache:
-    directory: /tmp/tensorflow-cache/mgb3-baseline-sbs
+    directory: /tmp/tensorflow-cache/mgb3-baseline
     batch_size: 1000
     key: logmelspectrogram
     consume: false
@@ -85,8 +83,8 @@ post_process:
     batch_size: 64
 
 experiment:
-  cache_directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/sbs/cache
-  name: mgb3-baseline-sbs
+  cache_directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/mgb3/cache
+  name: mgb3-baseline
   model:
     key: cnn
   optimizer:
@@ -94,7 +92,7 @@ experiment:
     kwargs:
       learning_rate: 0.0001
   input_shape: [198, 40]
-  output_shape: [11]
+  output_shape: [5]
   callbacks:
     - cls: TensorBoard
     - cls: ModelCheckpoint
@@ -122,7 +120,7 @@ experiment:
       shuffle_buffer_size: 20000
       batch_size: 64
     validation:
-      split: test
+      split: dev0.1
       batch_size: 64
     test:
       split: test

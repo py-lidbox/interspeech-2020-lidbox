@@ -64,3 +64,10 @@ function assert_commands_exist {
         exit $error
     fi
 }
+
+function config_to_jobname {
+    local config=$1
+    local experiment_key=$(get_experiment_key $config)
+    local model_key=$(get_model_key $config)
+    printf "%s-%s\n" $model_key $experiment_key
+}

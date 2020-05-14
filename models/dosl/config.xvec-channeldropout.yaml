@@ -1,46 +1,5 @@
 datasets:
-  - key: ap19-olr
-    labels:
-    - bo-CN
-    - id
-    - ja
-    - kk-CN
-    - ko
-    - ru
-    - ug-CN
-    - vi
-    - yue-CN
-    - zh-CN
-    splits:
-      - key: train
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/ap19-olr/train_no_region
-        datafiles:
-            - utt2path
-            - utt2label
-      - key: test
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/ap19-olr/test_no_region
-        datafiles:
-            - utt2path
-            - utt2label
-  - key: mgb3
-    labels:
-    - afb
-    - ar-x-lav
-    - ar-x-nor
-    - arb
-    - arz
-    splits:
-      - key: train
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/train_5dev0.9_augment
-        datafiles:
-            - utt2path
-            - utt2label
-      - key: test
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/test_fixed_labels
-        datafiles:
-            - utt2path
-            - utt2label
-  - key: sbs
+  - key: dosl
     labels:
     - be
     - bg
@@ -55,12 +14,17 @@ datasets:
     - uk
     splits:
       - key: train
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/sbs/train
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/dosl/train
+        datafiles:
+            - utt2path
+            - utt2label
+      - key: dev
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/dosl/dev
         datafiles:
             - utt2path
             - utt2label
       - key: test
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/sbs/test
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/dosl/test
         datafiles:
             - utt2path
             - utt2label
@@ -88,7 +52,7 @@ pre_process:
     length_ms: 2000
     step_ms: 1500
   cache:
-    directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/combined3/cache
+    directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/dosl/cache
     batch_size: 1000
     key: signals_rmsvad_chunks_2sec
     log_interval: 20000
@@ -117,28 +81,27 @@ post_process:
     sample_rate: null
     signal: null
   cache:
-    directory: /tmp/tensorflow-cache/sbs-baseline-combined3
+    directory: /tmp/tensorflow-cache/channeldropout50-dosl
     batch_size: 1000
     key: logmelspectrogram
     consume: false
-  chunks:
-    length: 30
-    step: 30
   tensorboard:
     num_batches: 100
     batch_size: 64
 
 experiment:
-  cache_directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/combined3/cache
-  name: sbs-baseline-combined3
+  cache_directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/dosl/cache
+  name: channeldropout50-dosl
   model:
-    key: bi_gru
+    key: xvector
+    kwargs:
+      channel_dropout_rate: 0.5
   optimizer:
     cls: Adam
     kwargs:
       learning_rate: 0.0001
-  input_shape: [30, 40]
-  output_shape: [25]
+  input_shape: [198, 40]
+  output_shape: [11]
   callbacks:
     - cls: TensorBoard
     - cls: ModelCheckpoint
@@ -163,10 +126,10 @@ experiment:
   data:
     train:
       split: train
-      shuffle_buffer_size: 100000
+      shuffle_buffer_size: 20000
       batch_size: 64
     validation:
-      split: test
+      split: dev
       batch_size: 64
     test:
       split: test

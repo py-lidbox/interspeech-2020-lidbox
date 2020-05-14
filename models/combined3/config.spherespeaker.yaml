@@ -17,6 +17,11 @@ datasets:
         datafiles:
             - utt2path
             - utt2label
+      - key: dev
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/ap19-olr/dev_no_region
+        datafiles:
+            - utt2path
+            - utt2label
       - key: test
         path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/ap19-olr/test_no_region
         datafiles:
@@ -35,12 +40,17 @@ datasets:
         datafiles:
             - utt2path
             - utt2label
+      - key: dev
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/dev0.1_fixed_labels
+        datafiles:
+            - utt2path
+            - utt2label
       - key: test
         path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/test_fixed_labels
         datafiles:
             - utt2path
             - utt2label
-  - key: sbs
+  - key: dosl
     labels:
     - be
     - bg
@@ -55,12 +65,17 @@ datasets:
     - uk
     splits:
       - key: train
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/sbs/train
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/dosl/train
+        datafiles:
+            - utt2path
+            - utt2label
+      - key: dev
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/dosl/dev
         datafiles:
             - utt2path
             - utt2label
       - key: test
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/sbs/test
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/dosl/test
         datafiles:
             - utt2path
             - utt2label
@@ -117,7 +132,7 @@ post_process:
     sample_rate: null
     signal: null
   cache:
-    directory: /tmp/tensorflow-cache/embed512-combined3
+    directory: /tmp/tensorflow-cache/embed1000-combined3
     batch_size: 1000
     key: logmelspectrogram
     consume: false
@@ -127,11 +142,9 @@ post_process:
 
 experiment:
   cache_directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/combined3/cache
-  name: embed512-combined3
+  name: embed1000-combined3
   model:
     key: spherespeaker
-    kwargs:
-      embedding_dim: 512
   optimizer:
     cls: Adam
     kwargs:
@@ -165,7 +178,7 @@ experiment:
       shuffle_buffer_size: 20000
       batch_size: 64
     validation:
-      split: test
+      split: dev
       batch_size: 64
     test:
       split: test

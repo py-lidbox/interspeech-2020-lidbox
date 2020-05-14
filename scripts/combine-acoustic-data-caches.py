@@ -1,5 +1,5 @@
 """
-In order to ensure the open task is exactly the union of all closed task inputs, this script combines all acoustic data caches into a single cache.
+For the purpose of comparable results, to ensure the open task is exactly the union of all closed task inputs, this script combines all acoustic data caches into a single cache.
 """
 import argparse
 import os
@@ -16,10 +16,16 @@ parser.add_argument("experiment_dir", type=str)
 args = parser.parse_args()
 expdir = args.experiment_dir
 
+split_types = ("train", "validation", "test")
+
 # Use baseline configs for dataset definitions
 baseline_configs = [
-    os.path.join(expdir, "models", dataset_key, "config.baseline.yaml")
-    for dataset_key in ("ap19-olr", "mgb3", "sbs")]
+    os.path.join(
+        expdir,
+        "models",
+        dataset_key,
+        "config.{}-baseline.yaml".format(dataset_key.replace('-', "")))
+    for dataset_key in ("ap19-olr", "mgb3", "dosl")]
 combined_config = os.path.join(expdir, "models/combined3/config.ap19olr-baseline.yaml")
 
 datasets = []
@@ -56,15 +62,15 @@ logger.info("computing dataset sample ratios for weighting random sampling durin
 
 # Create weights for each dataset depending on how many samples they have
 # Assuming the source datasets are cached, we can iterate over them
-dataset_weights = [{k: ds[k].reduce(0, lambda c, x: c + 1).numpy() for k in ("train", "test")} for ds in datasets]
-num_total_elements = {k: sum(ds[k] for ds in dataset_weights) for k in ("train", "test")}
-dataset_weights = [{k: ds[k] / num_total_elements[k] for k in ("train", "test")} for ds in dataset_weights]
+dataset_weights = [{k: ds[k].reduce(0, lambda c, x: c + 1).numpy() for k in split_types} for ds in datasets]
+num_total_elements = {k: sum(ds[k] for ds in dataset_weights) for k in split_types}
+dataset_weights = [{k: ds[k] / num_total_elements[k] for k in split_types} for ds in dataset_weights]
 
 logger.info("merging datasets")
 
 # Create combined dataset iterators by sampling randomly from all 3 dataset iterators
 # Use sample ratios as weights to avoid having a tail of samples from only one dataset
-# Repeat separately for the training and test set
+# Repeat separately for all splits
 split2ds = {
     k: (tf.data.experimental.sample_from_datasets(
             [d[k] for d in datasets],
@@ -74,7 +80,7 @@ split2ds = {
         .shuffle(int(2e5))
         .map(fix_targets)
         .apply(lambda ds: cache_ds(ds, k)))
-    for k in ("train", "test")}
+    for k in split_types}
 
 print_interval = 20000
 

@@ -12,39 +12,39 @@ fi
 expdir=$1
 
 closed_set_configs=(
-models/ap19-olr/config.baseline.yaml
-models/ap19-olr/config.sbs-baseline.yaml
+models/ap19-olr/config.ap19olr-baseline.yaml
+models/ap19-olr/config.dosl-baseline.yaml
 models/ap19-olr/config.mgb3-baseline.yaml
+models/ap19-olr/config.spherespeaker.yaml
+models/ap19-olr/config.xvec-2d.yaml
 models/ap19-olr/config.xvec-channeldropout.yaml
 models/ap19-olr/config.xvec-extended.yaml
-models/ap19-olr/config.xvec-2d.yaml
-models/ap19-olr/config.spherespeaker.yaml
-models/mgb3/config.baseline.yaml
-models/mgb3/config.sbs-baseline.yaml
+models/dosl/config.ap19olr-baseline.yaml
+models/dosl/config.dosl-baseline.yaml
+models/dosl/config.mgb3-baseline.yaml
+models/dosl/config.spherespeaker.yaml
+models/dosl/config.xvec-2d.yaml
+models/dosl/config.xvec-channeldropout.yaml
+models/dosl/config.xvec-extended.yaml
 models/mgb3/config.ap19olr-baseline.yaml
+models/mgb3/config.dosl-baseline.yaml
+models/mgb3/config.mgb3-baseline.yaml
+models/mgb3/config.spherespeaker.yaml
+models/mgb3/config.xvec-2d.yaml
 models/mgb3/config.xvec-channeldropout.yaml
 models/mgb3/config.xvec-extended.yaml
-models/mgb3/config.xvec-2d.yaml
-models/mgb3/config.spherespeaker.yaml
-models/sbs/config.baseline.yaml
-models/sbs/config.mgb3-baseline.yaml
-models/sbs/config.ap19olr-baseline.yaml
-models/sbs/config.xvec-channeldropout.yaml
-models/sbs/config.xvec-extended.yaml
-models/sbs/config.xvec-2d.yaml
-models/sbs/config.spherespeaker.yaml
 )
 
 open_set_configs=(
 models/combined3/config.ap19olr-baseline.yaml
-models/combined3/config.sbs-baseline.yaml
+models/combined3/config.dosl-baseline.yaml
 models/combined3/config.mgb3-baseline.yaml
 models/combined3/config.xvec-channeldropout.yaml
 models/combined3/config.xvec-extended.yaml
 models/combined3/config.xvec-2d.yaml
 models/combined3/config.spherespeaker.yaml
 )
-dataset_keys=(ap19-olr mgb3 sbs)
+dataset_keys=(ap19-olr mgb3 dosl)
 
 echo 'checking closed set config files with lidbox JSON schema'
 for cf in ${closed_set_configs[*]}; do

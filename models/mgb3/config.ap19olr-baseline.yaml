@@ -12,6 +12,11 @@ datasets:
         datafiles:
             - utt2path
             - utt2label
+      - key: dev0.1
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/dev0.1_fixed_labels
+        datafiles:
+            - utt2path
+            - utt2label
       - key: test
         path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/test_fixed_labels
         datafiles:
@@ -116,7 +121,7 @@ experiment:
       shuffle_buffer_size: 20000
       batch_size: 64
     validation:
-      split: test
+      split: dev0.1
       batch_size: 64
     test:
       split: test

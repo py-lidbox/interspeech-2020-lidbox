@@ -1,0 +1,53 @@
+datasets:
+  - key: mgb3
+    labels:
+    - afb
+    - ar-x-lav
+    - ar-x-nor
+    - arb
+    - arz
+    splits:
+      - key: train
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/train_5dev0.9_augment
+        datafiles:
+            - utt2path
+            - utt2label
+      - key: dev0.1
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/dev0.1_fixed_labels
+        datafiles:
+            - utt2path
+            - utt2label
+      - key: test
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/test_fixed_labels
+        datafiles:
+            - utt2path
+            - utt2label
+
+pre_initialize:
+  shuffle_utterances: true
+  allow_unknown_labels: false
+
+post_initialize:
+  check_wav_headers: true
+  num_prefetched_signals: 5000
+
+pre_process:
+  filters:
+    equal:
+      key: sample_rate
+      value: 16000
+  repeat_too_short_signals:
+    min_length_ms: 2000
+  rms_vad:
+    strength: 0.1
+    vad_frame_length_ms: 10
+    min_non_speech_length_ms: 100
+  chunks:
+    length_ms: 2000
+    step_ms: 1500
+  cache:
+    directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/mgb3/cache
+    batch_size: 1000
+    key: signals_rmsvad_chunks_2sec
+    log_interval: 20000
+    consume: true

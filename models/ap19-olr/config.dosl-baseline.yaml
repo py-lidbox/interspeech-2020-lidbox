@@ -1,19 +1,30 @@
 datasets:
-  - key: mgb3
+  - key: ap19-olr
     labels:
-    - afb
-    - ar-x-lav
-    - ar-x-nor
-    - arb
-    - arz
+    - bo-CN
+    - id
+    - ja
+    - kk-CN
+    - ko
+    - ru
+    - ug-CN
+    - unknown
+    - vi
+    - yue-CN
+    - zh-CN
     splits:
       - key: train
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/train_5dev0.9_augment
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/ap19-olr/train_no_region
+        datafiles:
+            - utt2path
+            - utt2label
+      - key: dev
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/ap19-olr/dev_no_region
         datafiles:
             - utt2path
             - utt2label
       - key: test
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/test_fixed_labels
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/ap19-olr/test_no_region
         datafiles:
             - utt2path
             - utt2label
@@ -41,11 +52,11 @@ pre_process:
     length_ms: 2000
     step_ms: 1500
   cache:
-    directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/mgb3/cache
+    directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/ap19-olr/cache
     batch_size: 1000
     key: signals_rmsvad_chunks_2sec
     log_interval: 20000
-    consume: true
+    consume: false
 
 features:
   batch_size: 1024
@@ -70,27 +81,28 @@ post_process:
     sample_rate: null
     signal: null
   cache:
-    directory: /tmp/tensorflow-cache/mgb3-baseline-channeldropout
+    directory: /tmp/tensorflow-cache/dosl-baseline-ap19olr
     batch_size: 1000
     key: logmelspectrogram
     consume: false
+  chunks:
+    length: 30
+    step: 30
   tensorboard:
     num_batches: 100
     batch_size: 64
 
 experiment:
-  cache_directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/mgb3/cache
-  name: mgb3-baseline-channeldropout
+  cache_directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/ap19-olr/cache
+  name: dosl-baseline-ap19olr
   model:
-    key: cnn
-    kwargs:
-      channel_dropout_rate: 0.5
+    key: bi_gru
   optimizer:
     cls: Adam
     kwargs:
       learning_rate: 0.0001
-  input_shape: [198, 40]
-  output_shape: [5]
+  input_shape: [30, 40]
+  output_shape: [11]
   callbacks:
     - cls: TensorBoard
     - cls: ModelCheckpoint
@@ -115,10 +127,10 @@ experiment:
   data:
     train:
       split: train
-      shuffle_buffer_size: 20000
+      shuffle_buffer_size: 120000
       batch_size: 64
     validation:
-      split: test
+      split: dev
       batch_size: 64
     test:
       split: test

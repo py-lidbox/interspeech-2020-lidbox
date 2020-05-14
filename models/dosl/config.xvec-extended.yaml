@@ -1,25 +1,30 @@
 datasets:
-  - key: ap19-olr
+  - key: dosl
     labels:
-    - bo-CN
-    - id
-    - ja
-    - kk-CN
-    - ko
+    - be
+    - bg
+    - cs
+    - hr
+    - mk
+    - pl
     - ru
-    - ug-CN
-    - unknown
-    - vi
-    - yue-CN
-    - zh-CN
+    - sk
+    - sl
+    - sr
+    - uk
     splits:
       - key: train
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/ap19-olr/train_no_region
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/dosl/train
+        datafiles:
+            - utt2path
+            - utt2label
+      - key: dev
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/dosl/dev
         datafiles:
             - utt2path
             - utt2label
       - key: test
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/ap19-olr/test_no_region
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/dosl/test
         datafiles:
             - utt2path
             - utt2label
@@ -47,11 +52,11 @@ pre_process:
     length_ms: 2000
     step_ms: 1500
   cache:
-    directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/ap19-olr/cache
+    directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/dosl/cache
     batch_size: 1000
     key: signals_rmsvad_chunks_2sec
     log_interval: 20000
-    consume: true
+    consume: false
 
 features:
   batch_size: 1024
@@ -76,7 +81,7 @@ post_process:
     sample_rate: null
     signal: null
   cache:
-    directory: /tmp/tensorflow-cache/ap19olr-baseline-channeldropout
+    directory: /tmp/tensorflow-cache/xvec-ext-dosl
     batch_size: 1000
     key: logmelspectrogram
     consume: false
@@ -85,12 +90,10 @@ post_process:
     batch_size: 64
 
 experiment:
-  cache_directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/ap19-olr/cache
-  name: ap19olr-baseline-channeldropout
+  cache_directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/dosl/cache
+  name: xvec-ext-dosl
   model:
-    key: xvector
-    kwargs:
-      channel_dropout_rate: 0.5
+    key: xvector_extended
   optimizer:
     cls: Adam
     kwargs:
@@ -124,7 +127,7 @@ experiment:
       shuffle_buffer_size: 20000
       batch_size: 64
     validation:
-      split: test
+      split: dev
       batch_size: 64
     test:
       split: test

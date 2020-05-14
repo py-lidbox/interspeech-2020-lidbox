@@ -15,7 +15,7 @@ args = parser.parse_args()
 experiment2modelnum = {key: str(i) for i, key in enumerate((
     "ap19olr-baseline-combined3",
     "mgb3-baseline-combined3",
-    "sbs-baseline-combined3",
+    "dosl-baseline-combined3",
     "embed512-combined3",
     "channeldropout50-combined3",
     "xvec-ext-combined3",
@@ -25,7 +25,7 @@ config_prefix = os.path.join(args.experiment_dir, "models", "combined3")
 config_files = [
     "config.ap19olr-baseline.yaml",
     "config.mgb3-baseline.yaml",
-    "config.sbs-baseline.yaml",
+    "config.dosl-baseline.yaml",
     "config.spherespeaker.yaml",
     "config.xvec-channeldropout.yaml",
     "config.xvec-extended.yaml",

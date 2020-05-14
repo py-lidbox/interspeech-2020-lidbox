@@ -15,49 +15,49 @@ args = parser.parse_args()
 dataset2name = {
     "ap19-olr": "AP19-OLR",
     "mgb3": "MGB-3",
-    "sbs": "SBS",
+    "dosl": "DoSL",
 }
-dataset_order = ("ap19-olr", "mgb3", "sbs")
+dataset_order = ("ap19-olr", "mgb3", "dosl")
 
 config_files_by_model = [
     [
-        "models/ap19-olr/config.baseline.yaml",
+        "models/ap19-olr/config.ap19olr-baseline.yaml",
         "models/mgb3/config.ap19olr-baseline.yaml",
-        "models/sbs/config.ap19olr-baseline.yaml",
+        "models/dosl/config.ap19olr-baseline.yaml",
     ],
     [
         "models/ap19-olr/config.mgb3-baseline.yaml",
-        "models/mgb3/config.baseline.yaml",
-        "models/sbs/config.mgb3-baseline.yaml",
+        "models/mgb3/config.mgb3-baseline.yaml",
+        "models/dosl/config.mgb3-baseline.yaml",
     ],
     [
-        "models/ap19-olr/config.sbs-baseline.yaml",
-        "models/mgb3/config.sbs-baseline.yaml",
-        "models/sbs/config.baseline.yaml",
+        "models/ap19-olr/config.dosl-baseline.yaml",
+        "models/mgb3/config.dosl-baseline.yaml",
+        "models/dosl/config.dosl-baseline.yaml",
     ],
     [
         "models/ap19-olr/config.spherespeaker.yaml",
         "models/mgb3/config.spherespeaker.yaml",
-        "models/sbs/config.spherespeaker.yaml",
+        "models/dosl/config.spherespeaker.yaml",
     ],
     [
         "models/ap19-olr/config.xvec-channeldropout.yaml",
         "models/mgb3/config.xvec-channeldropout.yaml",
-        "models/sbs/config.xvec-channeldropout.yaml",
+        "models/dosl/config.xvec-channeldropout.yaml",
     ],
     [
         "models/ap19-olr/config.xvec-extended.yaml",
         "models/mgb3/config.xvec-extended.yaml",
-        "models/sbs/config.xvec-extended.yaml",
+        "models/dosl/config.xvec-extended.yaml",
     ],
     [
         "models/ap19-olr/config.xvec-2d.yaml",
         "models/mgb3/config.xvec-2d.yaml",
-        "models/sbs/config.xvec-2d.yaml",
+        "models/dosl/config.xvec-2d.yaml",
     ],
 ]
 # CLOSED TASK BACKEND
-# models/ap19-olr/config.baseline-backendNB.yaml
+# models/ap19-olr/config.ap19olr-baseline-backendNB.yaml
 # models/ap19-olr/config.mgb3-baseline-backendNB.yaml
 # etc
 # OPEN TASK BACKEND
@@ -89,8 +89,6 @@ for model_num, config_files in enumerate(config_files_by_model, start=1):
         data["closed-task-e2e"][-1][dataset] = cavg_from_config(config)
         config = lidbox.api.load_yaml(os.path.join(args.experiment_dir, config_file.replace(".yaml", "-backendNB.yaml")))
         data["closed-task-embed"][-1][dataset] = cavg_from_config(config)
-        if "config.baseline" in config_file:
-            config_file = config_file.replace("config.baseline", "config.{}-baseline".format(dataset.replace("-", '')))
         config = lidbox.api.load_yaml(os.path.join(args.experiment_dir, config_file.replace(".yaml", "-combined3backendNB.yaml")))
         data["open-task-embed"][-1][dataset] = cavg_from_config(config)
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # Wrapper code for the Aalto compute cluster
+# If you don't need to load the dependencies or do error checking, you can replace everything with just:
+#   lidbox "$1" "$2" -v
 set -ue
 
 function print_env {
@@ -34,19 +36,13 @@ function env_has_error {
     return $error
 }
 
-if [ $# -ne 2 -a $# -ne 3 ]; then
-    echo_err "wrong number of args: $#"
-    echo_err 'usage: lidbox-run.bash config.yaml lidbox-subcommand [--lidbox-kwargs ...]'
+if [ $# -ne 2 ]; then
+    echo_err "wrong number of args: $# out of 2"
+    echo_err 'usage: lidbox-run.bash lidbox-subcommand config.yaml'
     exit 2
 fi
-
-config=$(readlink --canonicalize-missing $1)
-subcommand="$2"
-if [ $# -eq 3 ]; then
-    kwargs="$3"
-else
-    kwargs=" "
-fi
+subcommand="$1"
+config=$(readlink --canonicalize-missing $2)
 
 env_has_error $config || exit $?
 
@@ -56,6 +52,6 @@ export PYTHONUNBUFFERED=1
 export LIDBOX_DEBUG=false
 print_env >> /dev/stderr
 
-cmd="lidbox $subcommand $config $kwargs"
+cmd="lidbox $subcommand $config -v"
 echo "running '$cmd'"
 $cmd || exit $?

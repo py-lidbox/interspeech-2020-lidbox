@@ -1,25 +1,24 @@
 datasets:
-  - key: sbs
+  - key: mgb3
     labels:
-    - be
-    - bg
-    - cs
-    - hr
-    - mk
-    - pl
-    - ru
-    - sk
-    - sl
-    - sr
-    - uk
+    - afb
+    - ar-x-lav
+    - ar-x-nor
+    - arb
+    - arz
     splits:
       - key: train
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/sbs/train
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/train_5dev0.9_augment
+        datafiles:
+            - utt2path
+            - utt2label
+      - key: dev0.1
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/dev0.1_fixed_labels
         datafiles:
             - utt2path
             - utt2label
       - key: test
-        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/sbs/test
+        path: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/data/mgb3/test_fixed_labels
         datafiles:
             - utt2path
             - utt2label
@@ -47,11 +46,11 @@ pre_process:
     length_ms: 2000
     step_ms: 1500
   cache:
-    directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/sbs/cache
+    directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/mgb3/cache
     batch_size: 1000
     key: signals_rmsvad_chunks_2sec
     log_interval: 20000
-    consume: true
+    consume: false
 
 features:
   batch_size: 1024
@@ -76,24 +75,27 @@ post_process:
     sample_rate: null
     signal: null
   cache:
-    directory: /tmp/tensorflow-cache/xvec-ext-sbs
+    directory: /tmp/tensorflow-cache/dosl-baseline-mgb3
     batch_size: 1000
     key: logmelspectrogram
     consume: false
+  chunks:
+    length: 30
+    step: 30
   tensorboard:
     num_batches: 100
     batch_size: 64
 
 experiment:
-  cache_directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/sbs/cache
-  name: xvec-ext-sbs
+  cache_directory: /m/triton/scratch/elec/puhe/p/lindgrm1/exp/models/mgb3/cache
+  name: dosl-baseline-mgb3
   model:
-    key: xvector_extended
+    key: bi_gru
   optimizer:
     cls: Adam
     kwargs:
       learning_rate: 0.0001
-  input_shape: [198, 40]
+  input_shape: [30, 40]
   output_shape: [11]
   callbacks:
     - cls: TensorBoard
@@ -119,10 +121,10 @@ experiment:
   data:
     train:
       split: train
-      shuffle_buffer_size: 20000
+      shuffle_buffer_size: 120000
       batch_size: 64
     validation:
-      split: test
+      split: dev0.1
       batch_size: 64
     test:
       split: test
