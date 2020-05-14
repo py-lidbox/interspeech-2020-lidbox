@@ -24,5 +24,5 @@ for config in ${config_files[*]}; do
         --time=01-00 \
         --gres=gpu:1 \
         --mem=20G \
-        $experiment_dir/scripts/lidbox-run.bash e2e $config
+        $experiment_dir/scripts/lidbox-run.bash e2e $config -v
 done

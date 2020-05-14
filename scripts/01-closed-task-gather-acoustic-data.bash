@@ -32,5 +32,5 @@ for config in ${config_files[*]}; do
         --cpus-per-task=5 \
         --time=00-04 \
         --mem=20G \
-        $experiment_dir/scripts/lidbox-run.bash prepare $config
+        $experiment_dir/scripts/lidbox-run.bash prepare $config -v
 done

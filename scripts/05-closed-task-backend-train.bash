@@ -42,5 +42,5 @@ for config in ${config_files[*]}; do
         --time=00-04 \
         --gres=gpu:1 \
         --mem=20G \
-        $experiment_dir/scripts/lidbox-run.bash train-embeddings $config
+        $experiment_dir/scripts/lidbox-run.bash train-embeddings $config -v
 done

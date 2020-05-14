@@ -29,5 +29,5 @@ for config in ${config_files[*]}; do
         --constraint=volta \
         --gres=gpu:1 \
         --mem=32G \
-        $experiment_dir/scripts/lidbox-run.bash e2e $config
+        $experiment_dir/scripts/lidbox-run.bash e2e $config -v
 done
