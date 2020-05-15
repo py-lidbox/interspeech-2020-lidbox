@@ -1,10 +1,10 @@
 # x-vector comparison with lidbox
 
-Source code for the experiments described in INTERSPEECH 2020 paper "Releasing a toolkit and comparing the performance of x-vector language embeddings across various spoken language identification datasets".
+Source code for the experiments described in INTERSPEECH 2020 paper "Releasing a toolkit and comparing the performance of language embeddings across various spoken language identification datasets".
 
 All experiments were performed by running [`lidbox`](https://github.com/matiaslindgren/lidbox) on the [Triton](https://scicomp.aalto.fi/index.html) compute cluster at [Aalto University](https://aalto.fi/en).
 The workload manager for Triton is [Slurm](https://slurm.schedmd.com/documentation.html), and some wrapper code has been included for Slurm in this repository under `scripts`.
-In case you want to run the experiments without Slurm, please see [this](https://github.com/matiaslindgren/lidbox/tree/master/examples/common-voice) example on how to run `lidbox` for a generic experiment.
+In case you want to run the experiments without Slurm, or for some new dataset, please see [this](https://github.com/matiaslindgren/lidbox/tree/master/examples/common-voice) example on how to run `lidbox` for a generic experiment.
 
 
 ## Notes before running
@@ -25,8 +25,13 @@ Experiments can be reproduced on a Slurm cluster by running these numbered scrip
 * `01-closed-task-gather-acoustic-data.bash` (must complete before other steps)
 * `02-closed-task-baseline-train.bash`
 * `03-closed-task-all-train.bash`
-* `04-open-task-combine-acoustic-data-caches.bash`
-* `05-open-task-all-train.bash` (requires 04)
+* `04-generate-backend-training-configs.bash`
+* `05-closed-task-backend-train.bash`
+* `06-open-task-combine-acoustic-data-caches.bash`
+* `07-open-task-all-train.bash`
+* `08-open-task-backend-train.bash`
+* `09-collect-results.bash`
+
 
 ## If you do not have Slurm
 
