@@ -6,7 +6,7 @@ experiment_dir=
 source scripts/env.bash
 source scripts/utils.bash
 
-# We skip the baseline models since they were trained in step 02
+# We skip the baseline models since they were trained in step 2
 config_files=(
 # models/ap19-olr/config.ap19olr-baseline.yaml
 models/ap19-olr/config.mgb3-baseline.yaml

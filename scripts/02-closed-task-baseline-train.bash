@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Train the baseline models of three datasets
+# You could skip this and go to step 3 if you know the training pipeline is working ok
 set -ue
 
 experiment_dir=

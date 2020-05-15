@@ -8,8 +8,8 @@ source scripts/utils.bash
 
 config_files=(
 models/combined3/config.ap19olr-baseline.yaml
-models/combined3/config.mgb3-baseline.yaml
 models/combined3/config.dosl-baseline.yaml
+models/combined3/config.mgb3-baseline.yaml
 models/combined3/config.spherespeaker.yaml
 models/combined3/config.xvec-2d.yaml
 models/combined3/config.xvec-channeldropout.yaml
