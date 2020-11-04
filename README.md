@@ -15,7 +15,11 @@ It is unlikely the experiments work right away and you probably need to make som
 * Then make sure you have the acoustic data for all three datasets, e.g. by checking every path in every `utt2path` file.
 * Fix experiment directory `/m/triton/scratch/elec/puhe/p/lindgrm1/exp` or `/scratch/elec/puhe/p/lindgrm1/exp` in all yaml configuration files. If you have cloned or downloaded this repository, its path is the experiment directory.
 * Fix platform specific dependency loading in `scripts/env.bash`
-* Install TensorFlow 2 and `lidbox`.
+* Install TensorFlow 2 and `lidbox v0.5.0`, for example:
+```
+pip install https://github.com/py-lidbox/lidbox/archive/v0.5.0.zip
+```
+
 
 
 ## Recipe
