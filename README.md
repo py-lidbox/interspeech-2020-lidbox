@@ -1,6 +1,6 @@
 # x-vector comparison with lidbox
 
-Source code for the experiments described in INTERSPEECH 2020 paper "Releasing a toolkit and comparing the performance of language embeddings across various spoken language identification datasets".
+Source code for the experiments described in INTERSPEECH 2020 paper ["Releasing a toolkit and comparing the performance of language embeddings across various spoken language identification datasets"](https://www.isca-speech.org/archive/Interspeech_2020/abstracts/2706.html).
 
 All experiments were performed by running [`lidbox`](https://github.com/matiaslindgren/lidbox) on the [Triton](https://scicomp.aalto.fi/index.html) compute cluster at [Aalto University](https://aalto.fi/en).
 The workload manager for Triton is [Slurm](https://slurm.schedmd.com/documentation.html), and some wrapper code has been included for Slurm in this repository under `scripts`.
